@@ -35,19 +35,20 @@ namespace WpfApp1.MoreWindows
 
         public void correcting_film(TextBlock tb_FilmName, TextBlock tb_FilmGenre, Image image)
         {
-            //путь до картинки
-            tb_img_path.Text = Add_Film.curDirectoryProject_images + "\\" + tb_FilmName.Text;
-            string imagePath = Add_Film.curDirectoryProject_images + "\\" + tb_FilmName.Text + ".jpg";
-            BitmapImage bitmap_default;
+            string dirPath = curDirectoryProject_images;
+            string filePath = Path.Combine(curDirectoryProject_images, tb_FilmName.Text + ".jpg");
+            string imagePath = filePath;
+            BitmapImage bitmap_default = new BitmapImage();
+            bitmap_default.BeginInit();
+            bitmap_default.CacheOption = BitmapCacheOption.OnLoad;
+            bitmap_default.UriSource = new Uri(File.Exists(filePath) ? filePath : Path.Combine(Add_Film.curDirectoryProject_main, "default_img.jpg"));
+            bitmap_default.EndInit();
+            bitmap_default.Freeze();
 
-            if (File.Exists(imagePath))
-            {
-                bitmap_default = new BitmapImage(new Uri(imagePath));
-            }
-            else
-            {
-                bitmap_default = new BitmapImage(new Uri(Add_Film.curDirectoryProject_main + "\\default_img.jpg"));
-            }
+            //BitmapImage bitmap_default = new BitmapImage(File.Exists(imagePath) ? new Uri(imagePath) : new Uri(Path.Combine(Add_Film.curDirectoryProject_main, "default_img.jpg")));
+
+
+
             //загрузка картинки в отведенное окно
             img_drop.Source = bitmap_default;
 
@@ -66,40 +67,7 @@ namespace WpfApp1.MoreWindows
                         tb_name.Text = reader.GetString(1);
                         //отображение года фильма
                         tb_year.Text = reader.GetInt32(2).ToString();
-
-                        imagePath = Add_Film.curDirectoryProject_images + "\\" + reader.GetString(1) + ".jpg";
-
-                        if (File.Exists(imagePath))
-                        {
-                            bitmap_default = new BitmapImage(new Uri(imagePath));
-                        }
-                        else
-                        {
-                            bitmap_default = new BitmapImage(new Uri(Add_Film.curDirectoryProject_main + "\\default_img.jpg"));
-                        }
-                        image.Source = bitmap_default;
-
-                        tb_img_path.Text = bitmap_default.UriSource.ToString();
-                        if (tb_img_path.Text.Contains("file:///"))
-                            tb_img_path.Text = tb_img_path.Text.Replace("file:///", "");
-
-                        string[] filesToDelete = System.IO.Directory.GetFiles(tb_img_path.Text);
-                        foreach (string file in filesToDelete)
-                        {
-                            File.Delete(file);
-                        }
-
-                        JpegBitmapEncoder encoder = new JpegBitmapEncoder();
-                        if (bitmap_default.Width > 500 && bitmap_default.Height > 500)
-                            encoder.QualityLevel = 50; // устанавливаем низкое качество
-
-                        encoder.Frames.Add(BitmapFrame.Create(bitmap_default));
-
-                        // создаем FileStream для записи в файл
-                        using (FileStream file = new FileStream(imagePath, FileMode.Create))
-                        {
-                            encoder.Save(file);
-                        }
+                        tb_img_path.Text = filePath;
 
 
                         //отображение жанров в listBox

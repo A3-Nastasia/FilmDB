@@ -33,7 +33,7 @@ namespace WpfApp1
             stackPanel.Children.Add(wrapPanel_films);
 
             dB_Class.create_and_open();
-            get_all_notes_db("");
+            dB_Class.get_all_notes_db("");
         }
 
 
@@ -53,66 +53,6 @@ namespace WpfApp1
             }
         }
 
-        private void get_all_notes_db(string plus_sql)
-        {
-            using (var con = new SQLiteConnection(dB_Class.db_path))
-            {
-                con.Open();
-                using (var cmd = new SQLiteCommand(con))
-                {
-                    cmd.CommandText = @"SELECT * FROM Films "+plus_sql;
-
-                    SQLiteDataReader reader = cmd.ExecuteReader();
-
-                    while (reader.Read())
-                    {
-                        UC_film ucFilm = new UC_film();
-                        // присваиваем значения полям User Control'a из базы данных
-                        ucFilm.tb_FilmName.Text = reader.GetString(1);
-                        ucFilm.tb_FilmYear.Text = reader.GetInt32(2).ToString();
-
-                        string imagePath = Add_Film.curDirectoryProject_images + "\\" + reader.GetString(1) + ".jpg";
-                        BitmapImage bitmap_default;
-
-                        if (File.Exists(imagePath))
-                        {
-                            bitmap_default = new BitmapImage(new Uri(imagePath));
-                        }
-                        else
-                        {
-                            bitmap_default = new BitmapImage(new Uri(Add_Film.curDirectoryProject_main + "\\default_img.jpg"));
-                        }
-                        ucFilm.UC_image.Source = bitmap_default;
-
-
-                        string tb_default = ucFilm.tb_FilmGanre.Text;
-                        ucFilm.tb_FilmGanre.Text = "";
-                        //заполнение жанров через ,
-                        using (var cmd2 = new SQLiteCommand(con))
-                        {
-                            cmd2.CommandText = @"SELECT Genres.name FROM FilmGenres JOIN Genres ON FilmGenres.genre_id = Genres.id WHERE FilmGenres.film_id='" + reader.GetInt32(0) + "'";
-
-                            SQLiteDataReader reader_genres = cmd2.ExecuteReader();
-                            StringBuilder genresBuilder = new StringBuilder();
-                            while (reader_genres.Read())
-                            {
-                                if (genresBuilder.Length > 0)
-                                    genresBuilder.Append(", ");
-                                genresBuilder.Append(reader_genres.GetString(0));
-                            }
-                            ucFilm.tb_FilmGanre.Text = genresBuilder.ToString();
-
-                            reader_genres.Close();
-                            cmd2.ExecuteNonQuery();
-                        }
-                        wrapPanel_films.Children.Add(ucFilm);
-                    }
-                    reader.Close();
-                    cmd.ExecuteNonQuery();
-                }
-                con.Close();
-            }
-        }
 
         private void btn_add_Click(object sender, RoutedEventArgs e)
         {
@@ -147,13 +87,13 @@ namespace WpfApp1
         private void btn_refresh_Click(object sender, RoutedEventArgs e)
         {
             deleteAllUC();
-            get_all_notes_db("");
+            dB_Class.get_all_notes_db("", wrapPanel_films);
         }
 
         private void tb_search_TextChanged(object sender, TextChangedEventArgs e)
         {
             deleteAllUC();
-            get_all_notes_db("WHERE title LIKE '%"+tb_search.Text+ "%' OR release_year LIKE '%"+tb_search.Text+"%'");
+            dB_Class.get_all_notes_db("WHERE title LIKE '%"+tb_search.Text+ "%' OR release_year LIKE '%"+tb_search.Text+"%'", wrapPanel_films);
         }
     }
 }

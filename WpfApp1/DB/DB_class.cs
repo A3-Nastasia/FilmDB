@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Data.SQLite;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Controls;
+using System.Windows.Media.Imaging;
+using WpfApp1.MoreWindows;
 using WpfApp1.UserControls;
 
 namespace WpfApp1.DB
@@ -16,11 +19,75 @@ namespace WpfApp1.DB
 
         public DB_class()
         {
-            db_path = @"URI=file:" + path_to_directory + @"\MyDatabase10.sqlite";
+            db_path = @"URI=file:" + path_to_directory + @"\MyDatabase11.sqlite";
         }
 
 
-    public void create_and_open()
+
+
+        public void get_all_notes_db(string plus_sql, WrapPanel wrapPanel_films = null)
+        {
+            using (var con = new SQLiteConnection(db_path))
+            {
+                con.Open();
+                using (var cmd = new SQLiteCommand(con))
+                {
+                    cmd.CommandText = @"SELECT * FROM Films " + plus_sql;
+
+                    SQLiteDataReader reader = cmd.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        UC_film ucFilm = new UC_film();
+                        // присваиваем значения полям User Control'a из базы данных
+                        ucFilm.tb_FilmName.Text = reader.GetString(1);
+                        ucFilm.tb_FilmYear.Text = reader.GetInt32(2).ToString();
+
+                        string imagePath = Add_Film.curDirectoryProject_images + "\\" + reader.GetString(1) + ".jpg";
+                        BitmapImage bitmap_default;
+
+                        if (File.Exists(imagePath))
+                        {
+                            bitmap_default = new BitmapImage(new Uri(imagePath));
+                        }
+                        else
+                        {
+                            bitmap_default = new BitmapImage(new Uri(Add_Film.curDirectoryProject_main + "\\default_img.jpg"));
+                        }
+                        ucFilm.UC_image.Source = bitmap_default;
+
+
+                        string tb_default = ucFilm.tb_FilmGanre.Text;
+                        ucFilm.tb_FilmGanre.Text = "";
+                        //заполнение жанров через ,
+                        using (var cmd2 = new SQLiteCommand(con))
+                        {
+                            cmd2.CommandText = @"SELECT Genres.name FROM FilmGenres JOIN Genres ON FilmGenres.genre_id = Genres.id WHERE FilmGenres.film_id='" + reader.GetInt32(0) + "'";
+
+                            SQLiteDataReader reader_genres = cmd2.ExecuteReader();
+                            StringBuilder genresBuilder = new StringBuilder();
+                            while (reader_genres.Read())
+                            {
+                                if (genresBuilder.Length > 0)
+                                    genresBuilder.Append(", ");
+                                genresBuilder.Append(reader_genres.GetString(0));
+                            }
+                            ucFilm.tb_FilmGanre.Text = genresBuilder.ToString();
+
+                            reader_genres.Close();
+                            cmd2.ExecuteNonQuery();
+                        }
+                        if(wrapPanel_films!=null)
+                            wrapPanel_films.Children.Add(ucFilm);
+                    }
+                    reader.Close();
+                    cmd.ExecuteNonQuery();
+                }
+                con.Close();
+            }
+        }
+
+        public void create_and_open()
         {
             using (var con = new SQLiteConnection(db_path))
             {
@@ -178,7 +245,7 @@ namespace WpfApp1.DB
                         update_film_id = Convert.ToInt32(result);
                     }
 
-                    cmd.CommandText = @" DELETE FROM Films WHERE film_id='"+ update_film_id + "'";
+                    cmd.CommandText = @" DELETE FROM Films WHERE id='"+ update_film_id + "'";
                     cmd.ExecuteNonQuery();
 
                     foreach (object selectedItem in listBox_film.SelectedItems)

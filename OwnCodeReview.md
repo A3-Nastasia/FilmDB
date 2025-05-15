@@ -5,3 +5,6 @@
 - Naming (cases) is strange kinda.
 - Add more try/catch statement.
 - Same icons in different directories.
+- SQL queries (C# methods) are not in one file.
+- Need more comments.
+
