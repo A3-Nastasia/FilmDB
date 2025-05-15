@@ -1,0 +1,18 @@
+﻿<Window x:Class="WpfApp1.MoreWindows.Settings_MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp1.MoreWindows"
+        mc:Ignorable="d"
+        Title="Settings" Height="450" Width="400" WindowStartupLocation="CenterScreen" FontWeight="Bold">
+    <Grid Background="#8C9EAB">
+        <StackPanel>
+            <Label x:Name="lbl_settings" Height="50" Content="SETTINGS" FontFamily="Yu Gothic UI" FontWeight="Bold" FontSize="16" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#FF28323B" Margin="0,10"/>
+            
+            <Button x:Name="btn_addGenres" Height="50" Content="Add Genre" FontSize="16" FontWeight="Normal" Foreground="#FF28323B" BorderThickness="0"/>
+            <Button x:Name="btn_Clear" Height="50" Content="Clear All" FontSize="16" FontWeight="Normal" Foreground="#FF28323B" BorderThickness="0" Margin="0,15,0,0" Click="btn_Clear_Click"/>
+            <Button x:Name="btn_Clear_film" Height="50" Content="Clear All Films" FontSize="16" FontWeight="Normal" Foreground="#FF28323B" BorderThickness="0" Margin="0,15,0,0" Click="btn_Clear_film_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

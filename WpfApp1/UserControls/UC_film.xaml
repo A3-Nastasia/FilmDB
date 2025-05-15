@@ -1,0 +1,37 @@
+﻿<UserControl x:Class="WpfApp1.UserControls.UC_film"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WpfApp1.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="250">
+    <Grid Background="#28323B">
+        <StackPanel x:Name="UC_stackpanel" Orientation="Vertical" Margin="20" MaxWidth="250" Background="#28323B">
+
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="btn_correction" Height="40" Padding="10" Width="50" HorizontalAlignment="Right" Foreground="Black" BorderBrush="#FF707070" BorderThickness="0" Click="btn_correction_Click">
+                    <Button.Background>
+                        <ImageBrush ImageSource="edit_.png" Stretch="Uniform">
+                        </ImageBrush>
+                    </Button.Background>
+                </Button>
+
+                <Button x:Name="btn_delete" Height="40" Padding="5" Width="50" HorizontalAlignment="Right" Foreground="Black" BorderBrush="#FF707070" BorderThickness="0" Click="btn_delete_Click">
+                    <Button.Background>
+                        <ImageBrush ImageSource="dustbin.png" Stretch="Uniform"/>
+                    </Button.Background>
+                </Button>
+            </StackPanel>
+
+            <Border Background="#56707B">
+                <Image x:Name="UC_image" Stretch="Fill" Height="270"/>
+            </Border>
+
+            <TextBlock x:Name="tb_FilmName" Text="namename namename namenamename namename" Foreground="#FFEEEEEE" HorizontalAlignment="Center" TextWrapping="WrapWithOverflow" FontWeight="Bold" FontSize="14" />
+            <TextBlock x:Name="tb_FilmYear" Text="yearyearyearyearyearyear" Foreground="#FFEEEEEE" HorizontalAlignment="Center" TextWrapping="WrapWithOverflow"  Margin="0,5,0,0"/>
+            <TextBlock x:Name="tb_FilmGanre" Text="ganreganreganreganre ganreganreganre" Foreground="#FFEEEEEE" HorizontalAlignment="Center" TextWrapping="WrapWithOverflow" Margin="0,10,0,0"/>
+        </StackPanel>
+    </Grid>
+</UserControl>
