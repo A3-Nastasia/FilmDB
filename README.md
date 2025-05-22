@@ -9,7 +9,7 @@ To select genre click on any genre element. It will be selected.
 ### Settings
 To add a new genre, clear all tables or clear just film table click 2 times button `Settings`. 
 
-Screenshots:
+### Screenshots
 
 ![Main](Screenshots/Main%20window.jpg)
 ![Add](Screenshots/Add%20film.jpg)
